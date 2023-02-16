@@ -34,7 +34,7 @@ namespace DTC.Models.DCS
 
 		protected static string Wait()
 		{
-			var str = "{'device':'wait', 'delay': 200},";
+			var str = "{'device':'wait', 'delay': 100},";
 			return str.Replace("'", "\"");
 		}
 

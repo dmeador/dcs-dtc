@@ -34,7 +34,7 @@ namespace DTC.UI.Aircrafts.F16
 				Airbase = airbase;
 				Latitude = latitude;
 				Longitude = longitude;
-				Elevation = elevation;
+				Elevation = elevation; 
 			}
 
 			public override string ToString()
@@ -86,13 +86,14 @@ namespace DTC.UI.Aircrafts.F16
 			txtWptName.Text = wpt.Name;
 			txtWptLatLong.Text = wpt.Latitude + " " + wpt.Longitude;
 			txtWptElevation.Text = wpt.Elevation.ToString();
+			txtWptTimeOnStation.Text = wpt.TimeOnStation;
 		}
 
 		private void btnSave_Click(object sender, EventArgs e)
 		{
 			if (ValidateFields())
 			{
-				var wpt = Waypoint.FromStrings(txtWptName.Text, txtWptLatLong.Text, txtWptElevation.Text);
+				var wpt = Waypoint.FromStrings(txtWptName.Text, txtWptLatLong.Text, txtWptElevation.Text, txtWptTimeOnStation.Text);
 
 				if (_waypoint == null)
 				{
@@ -106,6 +107,7 @@ namespace DTC.UI.Aircrafts.F16
 					_waypoint.Latitude = wpt.Latitude;
 					_waypoint.Longitude = wpt.Longitude;
 					_waypoint.Name = wpt.Name;
+					_waypoint.TimeOnStation = wpt.TimeOnStation;
 					_callback(WaypointEditResult.SaveAndClose, _waypoint);
 					CloseDialog();
 				}
@@ -189,6 +191,7 @@ namespace DTC.UI.Aircrafts.F16
 			txtWptName.Text = "WPT " + (_flightPlan.Waypoints.Count + 1).ToString();
 			txtWptLatLong.Text = "";
 			txtWptElevation.Text = "0";
+			txtWptTimeOnStation.Text = "";
 			txtWptLatLong.Focus();
 		}
 
@@ -197,7 +200,7 @@ namespace DTC.UI.Aircrafts.F16
 			if (cboAirbases.SelectedIndex > -1)
 			{
 				var item = (AirbaseComboBoxItem)cboAirbases.SelectedItem;
-				var wpt = new Waypoint(0, item.Airbase, item.Latitude, item.Longitude, item.Elevation);
+				var wpt = new Waypoint(0, item.Airbase, item.Latitude, item.Longitude, item.Elevation, "");
 				LoadWaypoint(wpt);
 			}
 		}

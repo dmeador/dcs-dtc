@@ -22,6 +22,12 @@ namespace DTC.Models.F16.TOS
 		public void SetTime(int n, string time)
         {
 			TimesOnStation[n-1].Time = time;
+
+			if(time.Length > 0)
+            {
+				TimesOnStation[n - 1].EnableUpload = true;
+
+			}
         }
 
 		private void initializeList()

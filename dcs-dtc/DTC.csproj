@@ -81,6 +81,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\MDC_476\MDC_476.cs" />
+    <Compile Include="Models\MDC_476\Waypoints\Waypoint.cs" />
+    <Compile Include="Models\MDC_476\Waypoints\WaypointSystem.cs" />
     <Compile Include="Models\AH64\Waypoints\Ident.cs" />
     <Compile Include="Models\AH64\Waypoints\PointType.cs" />
     <Compile Include="Models\DCS\Emitters.cs" />
@@ -96,7 +99,6 @@
     <Compile Include="Models\AH64\Waypoints\WaypointSystem.cs" />
     <Compile Include="Models\AH64\Waypoints\Waypoint.cs" />
     <Compile Include="Models\F16\TOS\TOSSetting.cs" />
-    <Compile Include="Models\F16\TOS\TOSSystem.cs" />
     <Compile Include="Models\FA18\CMS\CMSystem.cs" />
     <Compile Include="Models\FA18\CMS\Program.cs" />
     <Compile Include="Models\FA18\PrePlanned\PrePlannedCoordinate.cs" />
@@ -125,7 +127,6 @@
     <Compile Include="Models\DCS\IAircraftDeviceManager.cs" />
     <Compile Include="Models\F16\Misc\MiscSystem.cs" />
     <Compile Include="Models\DCS\BaseBuilder.cs" />
-    <Compile Include="Models\F16\TOS\TOSSetting.cs" />
     <Compile Include="Models\F16\TOS\TOSSystem.cs" />
     <Compile Include="Models\F16\Upload\CMSBuilder.cs" />
     <Compile Include="Models\F16\Upload\HARMBuilder.cs" />
@@ -397,6 +398,12 @@
     <Compile Include="UI\Aircrafts\F16\WaypointsPage.Designer.cs">
       <DependentUpon>WaypointsPage.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\CommonPages\TextDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\CommonPages\TextDialog.Designer.cs">
+      <DependentUpon>TextDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\CommonPages\MainPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -405,6 +412,12 @@
     </Compile>
     <Compile Include="UI\CommonPages\Page.cs">
       <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\CommonPages\TextBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\CommonPages\TextBox.Designer.cs">
+      <DependentUpon>TextBox.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\CommonPages\PresetName.cs">
       <SubType>UserControl</SubType>
@@ -550,8 +563,14 @@
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="UI\CommonPages\TextDialog.resx">
+      <DependentUpon>TextDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\CommonPages\MainPage.resx">
       <DependentUpon>MainPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\CommonPages\TextBox.resx">
+      <DependentUpon>TextBox.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\CommonPages\PresetName.resx">
       <DependentUpon>PresetName.cs</DependentUpon>
@@ -586,6 +605,7 @@
     </None>
     <None Include="dtc.key.snk" />
     <None Include="packages.config" />
+    <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

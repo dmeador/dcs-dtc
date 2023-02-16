@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 
 namespace DTC.UI.CommonPages
 {
@@ -6,7 +7,8 @@ namespace DTC.UI.CommonPages
 	{
 		public delegate void DataChanged();
 
-		protected readonly AircraftPage _parent;
+		//protected readonly AircraftPage _parent;
+		protected AircraftPage _parent;
 
 		public AircraftSettingPage(AircraftPage parent) : base()
 		{
@@ -22,5 +24,10 @@ namespace DTC.UI.CommonPages
 		{
 			return "";
 		}
-	}
+
+        internal void OnWaypointsChanged(WaypointsEventArgs e)
+        {
+			_parent.OnWaypointsChanged( e);
+        }
+    }
 }

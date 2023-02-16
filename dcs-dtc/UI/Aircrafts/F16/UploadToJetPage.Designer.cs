@@ -253,6 +253,7 @@ namespace DTC.UI.Aircrafts.F16
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "UploadToJetPage";
             this.Size = new System.Drawing.Size(636, 554);
+            this.Enter += new System.EventHandler(this.UploadToJetPage_Enter);
             this.ResumeLayout(false);
 
 		}

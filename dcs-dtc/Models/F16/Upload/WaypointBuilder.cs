@@ -1,6 +1,7 @@
 ﻿using DTC.Models.DCS;
 using DTC.Models.F16.Waypoints;
 using System.Text;
+using System;
 
 namespace DTC.Models.F16.Upload
 {
@@ -17,8 +18,13 @@ namespace DTC.Models.F16.Upload
 		{
 			var wpts = _cfg.Waypoints.Waypoints;
 			var wptStart = _cfg.Waypoints.SteerpointStart;
+			
 			var wptEnd = wptStart + wpts.Count;
-
+			
+			if(_cfg.Waypoints.SteerpointEnd < wptEnd)
+			{
+				wptEnd = _cfg.Waypoints.SteerpointEnd;
+			}
 			if (wpts.Count == 0)
 			{
 				return;
@@ -41,32 +47,89 @@ namespace DTC.Models.F16.Upload
 				}
 				else
 				{
-					//Repeats the last waypoint till it fills
-					wpt = wpts[wpts.Count - 1];
+					// before //Repeats the last waypoint till it fills
+					//wpt = wpts[wpts.Count - 1];
+					// create a blank waypoint to fill in or overwrite data
+					wpt = new Waypoint(i, "", "", "", 0, "");
 				}
 
 				if (wpt.Blank)
 				{
-					continue;
+					// enter dummy lat lon
+					//continue;
+					AppendCommand(BuildDigits(ufc, (i + wptStart).ToString()));
+					AppendCommand(ufc.GetCommand("ENTR"));
+					AppendCommand(ufc.GetCommand("DOWN"));
+					AppendCommand(ufc.GetCommand("DOWN"));
+
+					AppendCommand(BuildCoordinate(ufc, "N 00 00.000"));
+					AppendCommand(ufc.GetCommand("ENTR"));
+					AppendCommand(ufc.GetCommand("DOWN"));
+
+					AppendCommand(BuildCoordinate(ufc, "W 00 00.000"));
+					AppendCommand(ufc.GetCommand("ENTR"));
+					AppendCommand(ufc.GetCommand("DOWN"));
+
+					AppendCommand(BuildDigits(ufc, "0"));  // elev
+					AppendCommand(ufc.GetCommand("ENTR")); // elev done
+					AppendCommand(ufc.GetCommand("DOWN"));
+					AppendCommand(BuildDigits(ufc, "000000"));
+					AppendCommand(ufc.GetCommand("ENTR")); // TOS done
+					AppendCommand(ufc.GetCommand("DOWN"));
+
+					Console.WriteLine($"WaypointBuilder.Build - blank - {(i + wptStart):d}, N 00 00.000, W 00 00.000, 0, 000000 ");
+				}
+                else
+                {
+					if (wpt.Latitude.Length == 0)
+					{
+						continue;
+					}
+					if (wpt.Longitude.Length == 0)
+					{
+						continue;
+					}
+
+					AppendCommand(BuildDigits(ufc, (i + wptStart).ToString()));
+					AppendCommand(ufc.GetCommand("ENTR"));
+					AppendCommand(ufc.GetCommand("DOWN"));
+					AppendCommand(ufc.GetCommand("DOWN"));
+					if(wpt.Latitude.Length == 0)
+                    {
+						AppendCommand(BuildCoordinate(ufc, "N 00 00.000"));
+					}
+					else
+                    {
+						AppendCommand(BuildCoordinate(ufc, wpt.Latitude));
+
+					}
+					AppendCommand(ufc.GetCommand("ENTR"));
+					AppendCommand(ufc.GetCommand("DOWN"));
+
+					if (wpt.Longitude.Length == 0)
+					{
+						AppendCommand(BuildCoordinate(ufc, "W000 00.000"));
+					}
+					else
+					{
+						AppendCommand(BuildCoordinate(ufc, wpt.Longitude));
+					}
+					AppendCommand(ufc.GetCommand("ENTR"));
+					AppendCommand(ufc.GetCommand("DOWN"));
+
+					AppendCommand(BuildDigits(ufc, wpt.Elevation.ToString()));
+					AppendCommand(ufc.GetCommand("ENTR")); 
+					AppendCommand(ufc.GetCommand("DOWN"));
+
+					String totString = Waypoint.SanitizeTosString(wpt.TimeOnStation);
+					// strip and fixup TOS format to 6-digit integer string
+
+					AppendCommand(BuildDigits(ufc, totString));
+					AppendCommand(ufc.GetCommand("ENTR"));
+					AppendCommand(ufc.GetCommand("DOWN"));
+					Console.WriteLine($"WaypointBuilder.Build - {(i + wptStart):d}, {wpt.Latitude},  {wpt.Latitude}, {wpt.Elevation:d}, {wpt.TimeOnStation} ");
 				}
 
-				AppendCommand(BuildDigits(ufc, (i + wptStart).ToString()));
-				AppendCommand(ufc.GetCommand("ENTR"));
-				AppendCommand(ufc.GetCommand("DOWN"));
-				AppendCommand(ufc.GetCommand("DOWN"));
-
-				AppendCommand(BuildCoordinate(ufc, wpt.Latitude));
-				AppendCommand(ufc.GetCommand("ENTR"));
-				AppendCommand(ufc.GetCommand("DOWN"));
-
-				AppendCommand(BuildCoordinate(ufc, wpt.Longitude));
-				AppendCommand(ufc.GetCommand("ENTR"));
-				AppendCommand(ufc.GetCommand("DOWN"));
-
-				AppendCommand(BuildDigits(ufc, wpt.Elevation.ToString()));
-				AppendCommand(ufc.GetCommand("ENTR"));
-				AppendCommand(ufc.GetCommand("DOWN"));
-				AppendCommand(ufc.GetCommand("DOWN"));
 			}
 
 			AppendCommand(ufc.GetCommand("1"));
@@ -104,6 +167,7 @@ namespace DTC.Models.F16.Upload
 				}
 			}
 
+			Console.WriteLine("WaypointBuilder.Build - buildcoord - " + sb.ToString());
 			return sb.ToString();
 		}
 	}

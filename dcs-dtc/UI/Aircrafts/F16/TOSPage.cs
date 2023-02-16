@@ -28,6 +28,15 @@ namespace DTC.UI.Aircrafts.F16
             return "ToS";
         }
 
+        public void UpdateTOS(TOSSystem tos)
+        {
+            _tos = tos;
+
+            var tblTos = PopulateTable(_tos);
+            tblTOS.Controls.Clear();
+            tblTOS.Controls.Add(tblTos, 0, 1);
+        }
+
         private TableLayoutPanel PopulateTable(TOSSystem tos)
         {
             var tblTos = new TableLayoutPanel();

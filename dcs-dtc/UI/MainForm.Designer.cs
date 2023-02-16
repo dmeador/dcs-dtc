@@ -34,12 +34,12 @@ namespace DTC.UI
             this.label2 = new System.Windows.Forms.Label();
             this.pnlContent = new System.Windows.Forms.Panel();
             this.pnlPages = new System.Windows.Forms.Panel();
-            this.breadCrumbs = new DTC.UI.Base.Controls.DTCBreadCrumb();
             this.pnlTop = new System.Windows.Forms.Panel();
             this.lblMinimize = new System.Windows.Forms.Label();
             this.lblPin = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.lblClose = new System.Windows.Forms.Label();
+            this.breadCrumbs = new DTC.UI.Base.Controls.DTCBreadCrumb();
             this.pnlBackground.SuspendLayout();
             this.pnlContent.SuspendLayout();
             this.pnlTop.SuspendLayout();
@@ -88,15 +88,6 @@ namespace DTC.UI
             this.pnlPages.Name = "pnlPages";
             this.pnlPages.Size = new System.Drawing.Size(770, 390);
             this.pnlPages.TabIndex = 4;
-            // 
-            // breadCrumbs
-            // 
-            this.breadCrumbs.BackColor = System.Drawing.Color.DarkKhaki;
-            this.breadCrumbs.Dock = System.Windows.Forms.DockStyle.Top;
-            this.breadCrumbs.Location = new System.Drawing.Point(0, 30);
-            this.breadCrumbs.Name = "breadCrumbs";
-            this.breadCrumbs.Size = new System.Drawing.Size(770, 30);
-            this.breadCrumbs.TabIndex = 2;
             // 
             // pnlTop
             // 
@@ -150,9 +141,9 @@ namespace DTC.UI
             this.label1.ForeColor = System.Drawing.Color.Black;
             this.label1.Location = new System.Drawing.Point(0, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(99, 30);
+            this.label1.Size = new System.Drawing.Size(321, 30);
             this.label1.TabIndex = 0;
-            this.label1.Text = "DCS DTC";
+            this.label1.Text = "DCS DTC / 476vFG (2022-12-08)";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lblClose
@@ -169,6 +160,15 @@ namespace DTC.UI
             this.lblClose.Text = "X";
             this.lblClose.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lblClose.Click += new System.EventHandler(this.lblClose_Click);
+            // 
+            // breadCrumbs
+            // 
+            this.breadCrumbs.BackColor = System.Drawing.Color.DarkKhaki;
+            this.breadCrumbs.Dock = System.Windows.Forms.DockStyle.Top;
+            this.breadCrumbs.Location = new System.Drawing.Point(0, 30);
+            this.breadCrumbs.Name = "breadCrumbs";
+            this.breadCrumbs.Size = new System.Drawing.Size(770, 30);
+            this.breadCrumbs.TabIndex = 2;
             // 
             // MainForm
             // 

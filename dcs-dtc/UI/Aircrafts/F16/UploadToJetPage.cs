@@ -137,11 +137,26 @@ namespace DTC.UI.Aircrafts.F16
 			CheckUploadButtonEnabled();
 		}
 
-    private void chkTOS_CheckedChanged(object sender, EventArgs e)
-    {
+		private void chkTOS_CheckedChanged(object sender, EventArgs e)
+		{
 			_cfg.TOS.EnableUpload = chkTOS.Checked;
 			_parent.DataChangedCallback();
 			CheckUploadButtonEnabled();
-    }
-  }
+		}
+
+		private void UploadToJetPage_Enter(object sender, EventArgs e)
+		{
+		}
+
+		public void HandleWaypointsChanged(object sender, WaypointsEventArgs e)
+		{
+			_cfg.Waypoints = e.Wpts;
+			_cfg.Waypoints.SetSteerpointStart(1);
+			_cfg.Waypoints.SetSteerpointEnd(e.Wpts.Waypoints.Count);
+			txtWaypointStart.Text = "1";
+			txtWaypointEnd.Text = e.Wpts.Waypoints.Count.ToString();
+		}
+
+	}
+
 }

@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using DTC.Models.MDC_476;
+
 
 namespace DTC.UI.Aircrafts.F16
 {
@@ -40,6 +42,7 @@ namespace DTC.UI.Aircrafts.F16
 		private void WptDialogEditCallback(WaypointEdit.WaypointEditResult result, Waypoint wpt)
 		{
 			if (result != WaypointEdit.WaypointEditResult.Close) {
+				WaypointsChanged();
 				_parent.DataChangedCallback();
 				this.RefreshList();
 			}
@@ -94,7 +97,7 @@ namespace DTC.UI.Aircrafts.F16
 			{
 				_waypoints.Remove(wpt);
 			}
-
+			WaypointsChanged();
 			_parent.DataChangedCallback();
 			RefreshList();
 			dgWaypoints.Focus();
@@ -123,5 +126,90 @@ namespace DTC.UI.Aircrafts.F16
 				ShowWptDialog((Waypoint)dgWaypoints.SelectedRows[0].DataBoundItem);
 			}
 		}
-	}
+
+		private void WaypointsChanged()
+		{
+			WaypointsEventArgs ev = new WaypointsEventArgs(_waypoints);
+			base.OnWaypointsChanged(ev);
+		}
+
+        private void dtcImport476_Click(object sender, EventArgs e)
+        {
+			// parse clipboard data - 476 MDC webpage data
+			MDC_476 MDC = new MDC_476();
+			MDC.GetClipboard();
+			DialogResult result;
+			using (DTC.UI.CommonPages.FormTextDialog form = new DTC.UI.CommonPages.FormTextDialog())
+			{
+				form.Text = "476 MDC Import";
+				form.FormText = MDC.MDC_data;
+				result = form.ShowDialog();
+				if(result == DialogResult.OK)
+                {
+					MDC.ParseFlightPlan_to_Waypoints();
+				}
+                else
+                {
+					return;
+                }
+			}
+			// 
+			foreach( DTC.Models.MDC_476.Waypoints.Waypoint wp in MDC.Waypoints.Waypoints )
+            {
+				var _wp = new Waypoint(wp.Sequence, wp.Name, wp.Latitude, wp.Longitude, wp.Elevation, wp.TimeOnTarget);
+
+				_waypoints.Add(_wp);
+			}
+
+			WaypointsChanged();
+			RefreshList();
+			_parent.DataChangedCallback();
+			// send TOS values to TOSPage
+			//DTC.Models.F16.TOS.TOSSystem TOS = MDC.Waypoints.GetTimeOnTargetsSetting();
+			//TOSPage tospage = (TOSPage)((AircraftPage)_parent).GetTosPage();
+			//tospage.UpdateTOS(TOS);
+		}
+
+		private void dtcButtonClear_Click(object sender, EventArgs e)
+        {
+			_waypoints.Waypoints.Clear();
+			RefreshList();
+			DTC.Models.F16.TOS.TOSSystem TOS = new DTC.Models.F16.TOS.TOSSystem();
+			//TOSPage tospage = (TOSPage)((AircraftPage)_parent).GetTosPage();
+			//tospage.UpdateTOS(TOS);
+
+		}
+
+		private void dtcButtonInsert_Click(object sender, EventArgs e)
+        {
+			if (dgWaypoints.SelectedRows.Count > 1)
+			{
+                System.Windows.Forms.MessageBox.Show("Select only one entry.\nInserted item goes above/before selection.");
+			}
+			else if (dgWaypoints.SelectedRows.Count == 1)
+			{
+				Waypoint wpt_selected = null;
+				int new_start_seq = 0;
+				foreach (DataGridViewRow row in dgWaypoints.SelectedRows)
+				{
+					wpt_selected = (Waypoint)row.DataBoundItem;
+					break;
+				}
+				int index = _waypoints.Waypoints.IndexOf(wpt_selected);
+				new_start_seq = wpt_selected.Sequence + 1;
+				var _wp = new Waypoint(wpt_selected.Sequence, "", "", "", 0, "");
+				_waypoints.Waypoints.Insert(index, _wp);
+				//renumber everything above
+				for(int i = index+1; i< _waypoints.Waypoints.Count; i++)
+                {
+					_waypoints.Waypoints[i].Sequence = new_start_seq++;
+
+				}
+				RefreshList();
+				WaypointsChanged();
+				_parent.DataChangedCallback();
+			}
+
+		}
+    }
 }
